@@ -7,9 +7,9 @@ class MyFirebaseMessaging : FirebaseMessagingService() {
 
     lateinit var listener: FirebaseMessageListener
 
-    override fun onNewToken(token: String) {
-        super.onNewToken(token)
-        listener.onNewToken(token)
+    override fun onNewToken(newToken: String) {
+        super.onNewToken(newToken)
+        listener.onNewToken(newToken)
     }
 
     override fun onMessageReceived(remoteMessage: RemoteMessage) {
