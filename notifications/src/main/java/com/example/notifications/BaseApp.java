@@ -4,11 +4,10 @@ import android.app.Application;
 
 import com.google.firebase.messaging.RemoteMessage;
 
-public abstract class BaseApp extends Application implements FirebaseMessageListener {
+public abstract class BaseApp extends Application {
 
-    public boolean shouldShowNotification;
+    public abstract void tokenReceived(String token);
 
-    public void enableNotification(boolean enable) {
-        this.shouldShowNotification = enable;
-    }
+    public abstract boolean notificationReceived(RemoteMessage message);
+
 }

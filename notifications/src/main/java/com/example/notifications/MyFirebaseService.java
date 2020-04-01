@@ -7,8 +7,6 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseService extends FirebaseMessagingService {
 
-
-
     @Override
     public void onNewToken(@NonNull String s) {
         super.onNewToken(s);
@@ -18,9 +16,8 @@ public class MyFirebaseService extends FirebaseMessagingService {
     @Override
     public void onMessageReceived(@NonNull RemoteMessage remoteMessage) {
         super.onMessageReceived(remoteMessage);
-        ((BaseApp) getApplication()).messageReceived(remoteMessage);
 
-        boolean showNotification = ((BaseApp)getApplication()).shouldShowNotification;
+        boolean showNotification = ((BaseApp) getApplication()).notificationReceived(remoteMessage);
 
         if (remoteMessage.getNotification() != null && showNotification) {
             NotificationHelper.get().create(getApplicationContext(),
@@ -28,5 +25,4 @@ public class MyFirebaseService extends FirebaseMessagingService {
                     remoteMessage.getNotification().getBody());
         }
     }
-
 }
