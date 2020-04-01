@@ -7,7 +7,7 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public class MyFirebaseService extends FirebaseMessagingService {
 
-    private boolean showNotification = false;
+
 
     @Override
     public void onNewToken(@NonNull String s) {
@@ -20,7 +20,7 @@ public class MyFirebaseService extends FirebaseMessagingService {
         super.onMessageReceived(remoteMessage);
         ((BaseApp) getApplication()).messageReceived(remoteMessage);
 
-        showNotification = ((BaseApp)getApplication()).shouldShowNotification;
+        boolean showNotification = ((BaseApp)getApplication()).shouldShowNotification;
 
         if (remoteMessage.getNotification() != null && showNotification) {
             NotificationHelper.get().create(getApplicationContext(),

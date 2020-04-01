@@ -6,9 +6,9 @@ import com.google.firebase.messaging.RemoteMessage;
 
 public abstract class BaseApp extends Application implements FirebaseMessageListener {
 
-    public boolean shouldShowNotification = false;
+    public boolean shouldShowNotification;
 
-    public boolean setShouldShowNotification() {
-        return shouldShowNotification;
+    public void enableNotification(boolean enable) {
+        this.shouldShowNotification = enable;
     }
 }
