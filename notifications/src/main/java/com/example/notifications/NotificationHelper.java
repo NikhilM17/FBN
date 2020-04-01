@@ -31,11 +31,6 @@ public class NotificationHelper {
     }
 
     public void create(Context context, String title, String message) {
-        create(context, title, message, "");
-    }
-
-
-    private void create(Context context, String title, String message, String auctionId) {
 
         createNotificationChannel(context);
 
