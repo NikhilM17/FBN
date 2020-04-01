@@ -8,7 +8,7 @@ public abstract class BaseApp extends Application implements FirebaseMessageList
 
     public boolean shouldShowNotification = false;
 
-    public void setShouldShowNotification(boolean shouldShowNotification) {
-        this.shouldShowNotification = shouldShowNotification;
+    public boolean setShouldShowNotification() {
+        return shouldShowNotification;
     }
 }
