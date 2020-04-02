@@ -119,9 +119,7 @@ public class NotificationHelper {
                 connection.connect();
                 in = connection.getInputStream();
                 return BitmapFactory.decodeStream(in);
-            } catch (MalformedURLException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
+            } catch (Exception e) {
                 e.printStackTrace();
             }
             return null;
