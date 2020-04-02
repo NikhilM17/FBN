@@ -36,4 +36,3 @@ dependencies {
 
     api 'com.google.firebase:firebase-messaging:20.1.3'
 }
-apply plugin: 'com.google.gms.google-services'
