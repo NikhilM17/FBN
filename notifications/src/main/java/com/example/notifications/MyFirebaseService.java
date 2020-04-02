@@ -1,5 +1,7 @@
 package com.example.notifications;
 
+import android.text.TextUtils;
+
 import androidx.annotation.NonNull;
 
 import com.google.firebase.messaging.FirebaseMessagingService;
@@ -19,12 +21,16 @@ public class MyFirebaseService extends FirebaseMessagingService {
 
         boolean showNotification = ((BaseApp) getApplication()).notificationReceived(remoteMessage);
 
-        if (remoteMessage.getNotification() != null && showNotification) {
-            NotificationHelper.get().create(getApplicationContext(),
-                    remoteMessage.getNotification().getTitle(),
-                    remoteMessage.getNotification().getBody());
+        RemoteMessage.Notification notification = remoteMessage.getNotification();
 
-
+        if (notification != null && showNotification) {
+            if (TextUtils.isEmpty(notification.getImageUrl().getPath())) {
+                NotificationHelper.get().create(getApplicationContext(),
+                        notification.getTitle(), notification.getBody());
+            } else {
+                NotificationHelper.get().create(getApplicationContext(),
+                        notification.getTitle(), notification.getBody(), notification.getImageUrl().getPath());
+            }
         }
     }
 }
