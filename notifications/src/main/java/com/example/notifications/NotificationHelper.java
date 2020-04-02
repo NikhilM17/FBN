@@ -11,11 +11,14 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.os.Handler;
+import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 
 import androidx.core.app.NotificationCompat;
 
+import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -31,10 +34,10 @@ public class NotificationHelper {
     private static NotificationHelper nm;
     private boolean channelCreated;
     private int count = 999;
+    private Handler handler = new Handler();
 
     private NotificationHelper() {
     }
-
 
     public static synchronized NotificationHelper get() {
         if (nm == null) {
@@ -43,33 +46,56 @@ public class NotificationHelper {
         return nm;
     }
 
-    public void create(Context context, String title, String message) {
-
-        //new SendNotification(context, title).execute();
-
-        try {
-            createNotificationChannel(context);
-            Intent intent = new Intent("ACTION");
-            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                    .setSmallIcon(R.mipmap.ic_launcher)
-                    .setContentTitle(title)
-                    .setContentText(message)
-                    .setContentIntent(pendingIntent)
-                    .setAutoCancel(true)
-                    .setOnlyAlertOnce(true)
-                    .setCategory(NotificationCompat.CATEGORY_SOCIAL)
-                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-            Notification notification = builder.build();
-
-            getManager(context).notify(count++, notification);
-
-            notifications.put(count, notification);
-
-        } catch (Exception e) {
-            e.printStackTrace();
+    public void create(Context context, String title, String message, String imageURl) {
+        NotificationCompat.Builder b = create(context, title, message);
+        if (!TextUtils.isEmpty(imageURl)) {
+            sendImageNotification(context, b, imageURl);
         }
+    }
+
+    private void sendImageNotification(final Context context, final NotificationCompat.Builder builder, final String imageURl) {
+        Executors.newSingleThreadExecutor().execute(new Runnable() {
+            @Override
+            public void run() {
+                final Bitmap bitmap = fetchImageAsync(imageURl);
+                if (bitmap != null) {
+                    handler.post(new Runnable() {
+                        @Override
+                        public void run() {
+                            builder.setLargeIcon(bitmap);
+                            Notification notification = builder.build();
+                            getManager(context).notify(count++, notification);
+                            notifications.put(count, notification);
+                        }
+                    });
+                }
+            }
+        });
+    }
+
+    public NotificationCompat.Builder create(Context context, String title, String message) {
+
+        createNotificationChannel(context);
+        Intent intent = new Intent("ACTION");
+        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                .setSmallIcon(R.mipmap.ic_launcher)
+                .setContentTitle(title)
+                .setContentText(message)
+                .setContentIntent(pendingIntent)
+                .setAutoCancel(true)
+                .setOnlyAlertOnce(true)
+                .setCategory(NotificationCompat.CATEGORY_SOCIAL)
+                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
+        Notification notification = builder.build();
+
+        getManager(context).notify(count++, notification);
+
+        notifications.put(count, notification);
+
+        return builder;
+
     }
 
     private void createNotificationChannel(Context context) {
@@ -96,70 +122,30 @@ public class NotificationHelper {
         return (NotificationManager) context.getSystemService(Context.NOTIFICATION_SERVICE);
     }
 
-    @SuppressLint("StaticFieldLeak")
-    private class SendNotification extends AsyncTask<String, Void, Bitmap> {
-        Context ctx;
-        String message;
-        String title;
 
-        public SendNotification(Context context, String appName) {
-            super();
-            this.ctx = context;
-            this.title = appName;
-        }
-
-        @Override
-        protected Bitmap doInBackground(String... params) {
-            InputStream in;
-            for (String string : params)
-                Log.w("Params", string);
-            message = params[0] + params[1];
+    private Bitmap fetchImageAsync(String c) {
+        BufferedInputStream in = null;
+        HttpURLConnection connection = null;
+        try {
+            URL url = new URL(c);
+            connection = (HttpURLConnection) url.openConnection();
+            connection.setDoInput(true);
+            connection.connect();
+            in = new BufferedInputStream(connection.getInputStream());
+            return BitmapFactory.decodeStream(in);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
             try {
-                URL url = new URL(params[2]);
-                HttpURLConnection connection = (HttpURLConnection) url.openConnection();
-                connection.setDoInput(true);
-                connection.connect();
-                in = connection.getInputStream();
-                return BitmapFactory.decodeStream(in);
-            } catch (Exception e) {
-                e.printStackTrace();
-            }
-            return null;
-        }
+                if (in != null)
+                    in.close();
 
-        @Override
-        protected void onPostExecute(Bitmap result) {
-            super.onPostExecute(result);
-            try {
-
-                createNotificationChannel(ctx);
-                PendingIntent pendingIntent;
-                Intent intent = new Intent("ACTION");
-
-                pendingIntent = PendingIntent.getActivity(ctx, 0, intent, 0);
-
-                NotificationCompat.Builder builder = new NotificationCompat.Builder(ctx, CHANNEL_ID)
-                        .setSmallIcon(R.mipmap.ic_launcher)
-                        .setContentTitle(title)
-                        .setContentText(message)
-                        .setContentIntent(pendingIntent)
-                        .setAutoCancel(true)
-                        .setOnlyAlertOnce(true)
-                        .setCategory(NotificationCompat.CATEGORY_SOCIAL)
-                        .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-//                if (result != null)
-//                    builder.setLargeIcon(result);
-
-                Notification notification = builder.build();
-
-                getManager(ctx).notify(count++, notification);
-
-                notifications.put(count, notification);
-
-            } catch (Exception e) {
-                e.printStackTrace();
+                if (connection != null)
+                    connection.disconnect();
+            } catch (Exception oe) {
+                oe.printStackTrace();
             }
         }
+        return null;
     }
 }
