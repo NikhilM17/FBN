@@ -59,6 +59,10 @@ public class NotificationHelper {
         NotificationCompat.Builder b = create(context, title, message);
         if (!TextUtils.isEmpty(imageURl)) {
             sendImageNotification(context, b, imageURl);
+        } else {
+            Notification notification = b.build();
+            getManager(context).notify(count++, notification);
+            notifications.put(count, notification);
         }
     }
 
@@ -96,13 +100,6 @@ public class NotificationHelper {
                 .setOnlyAlertOnce(true)
                 .setCategory(NotificationCompat.CATEGORY_SOCIAL)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
-
-        Notification notification = builder.build();
-
-        getManager(context).notify(count++, notification);
-
-        notifications.put(count, notification);
-
         return builder;
 
     }
