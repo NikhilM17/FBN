@@ -1,4 +1,4 @@
-package com.example.firebasenotification
+package com.example.firebasenotifications
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle

@@ -1,4 +1,4 @@
-package com.example.firebasenotification
+package com.example.firebasenotifications
 
 import org.junit.Test
 
