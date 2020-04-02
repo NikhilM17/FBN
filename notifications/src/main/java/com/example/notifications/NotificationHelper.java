@@ -59,7 +59,7 @@ public class NotificationHelper {
             public void run() {
                 final Bitmap bitmap = fetchImageAsync(imageURl);
                 if (bitmap != null) {
-                    handler.post(new Runnable() {
+                    /*handler.post(new Runnable() {
                         @Override
                         public void run() {
                             builder.setLargeIcon(bitmap);
@@ -67,7 +67,7 @@ public class NotificationHelper {
                             getManager(context).notify(count++, notification);
                             notifications.put(count, notification);
                         }
-                    });
+                    });*/
                 }
             }
         });
