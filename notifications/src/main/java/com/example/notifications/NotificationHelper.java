@@ -47,24 +47,29 @@ public class NotificationHelper {
 
         //new SendNotification(context, title).execute();
 
-        createNotificationChannel(context);
-        Intent intent = new Intent("ACTION");
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-        NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
-                .setSmallIcon(R.mipmap.ic_launcher)
-                .setContentTitle(title)
-                .setContentText(message)
-                .setContentIntent(pendingIntent)
-                .setAutoCancel(true)
-                .setOnlyAlertOnce(true)
-                .setCategory(NotificationCompat.CATEGORY_SOCIAL)
-                .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+        try {
+            createNotificationChannel(context);
+            Intent intent = new Intent("ACTION");
+            PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+            NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
+                    .setSmallIcon(R.mipmap.ic_launcher)
+                    .setContentTitle(title)
+                    .setContentText(message)
+                    .setContentIntent(pendingIntent)
+                    .setAutoCancel(true)
+                    .setOnlyAlertOnce(true)
+                    .setCategory(NotificationCompat.CATEGORY_SOCIAL)
+                    .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-        Notification notification = builder.build();
+            Notification notification = builder.build();
 
-        getManager(context).notify(count++, notification);
+            getManager(context).notify(count++, notification);
 
-        notifications.put(count, notification);
+            notifications.put(count, notification);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     private void createNotificationChannel(Context context) {
