@@ -11,6 +11,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
+import android.util.Log;
 import android.util.SparseArray;
 
 import androidx.core.app.NotificationCompat;
@@ -108,11 +109,11 @@ public class NotificationHelper {
         @Override
         protected Bitmap doInBackground(String... params) {
             InputStream in;
+            for (String string : params)
+                Log.w("Params", string);
             message = params[0] + params[1];
             try {
-                //URL url = new URL(params[2]);
-                URL url =
-                        new URL("https://www.esa.int/var/esa/storage/images/esa_multimedia/videos/2018/05/mars_sample_return/17493376-1-eng-GB/Mars_sample_return_pillars.jpg");
+                URL url = new URL(params[2]);
                 HttpURLConnection connection = (HttpURLConnection) url.openConnection();
                 connection.setDoInput(true);
                 connection.connect();
@@ -147,8 +148,8 @@ public class NotificationHelper {
                         .setCategory(NotificationCompat.CATEGORY_SOCIAL)
                         .setPriority(NotificationCompat.PRIORITY_DEFAULT);
 
-                if (result != null)
-                    builder.setLargeIcon(result);
+//                if (result != null)
+//                    builder.setLargeIcon(result);
 
                 Notification notification = builder.build();
 
