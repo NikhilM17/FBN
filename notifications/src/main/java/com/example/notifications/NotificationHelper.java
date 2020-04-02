@@ -12,10 +12,13 @@ import android.graphics.BitmapFactory;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Handler;
+import android.os.Looper;
+import android.os.Message;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.SparseArray;
 
+import androidx.annotation.NonNull;
 import androidx.core.app.NotificationCompat;
 
 import java.io.BufferedInputStream;
@@ -34,7 +37,7 @@ public class NotificationHelper {
     private static NotificationHelper nm;
     private boolean channelCreated;
     private int count = 999;
-    private Handler handler = new Handler();
+    private Handler handler;
 
     private NotificationHelper() {
     }
@@ -47,6 +50,12 @@ public class NotificationHelper {
     }
 
     public void create(Context context, String title, String message, String imageURl) {
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+            }
+        };
         NotificationCompat.Builder b = create(context, title, message);
         if (!TextUtils.isEmpty(imageURl)) {
             sendImageNotification(context, b, imageURl);
@@ -59,7 +68,7 @@ public class NotificationHelper {
             public void run() {
                 final Bitmap bitmap = fetchImageAsync(imageURl);
                 if (bitmap != null) {
-                    /*handler.post(new Runnable() {
+                    handler.post(new Runnable() {
                         @Override
                         public void run() {
                             builder.setLargeIcon(bitmap);
@@ -67,7 +76,7 @@ public class NotificationHelper {
                             getManager(context).notify(count++, notification);
                             notifications.put(count, notification);
                         }
-                    });*/
+                    });
                 }
             }
         });
