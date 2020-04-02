@@ -45,14 +45,11 @@ public class NotificationHelper {
 
     public void create(Context context, String title, String message) {
 
-        new SendNotification(context, title).execute();
+        //new SendNotification(context, title).execute();
 
-        /*createNotificationChannel(context);
-
+        createNotificationChannel(context);
         Intent intent = new Intent("ACTION");
-
         PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
-
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
@@ -67,7 +64,7 @@ public class NotificationHelper {
 
         getManager(context).notify(count++, notification);
 
-        notifications.put(count, notification);*/
+        notifications.put(count, notification);
     }
 
     private void createNotificationChannel(Context context) {
