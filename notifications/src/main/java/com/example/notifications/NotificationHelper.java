@@ -58,10 +58,11 @@ public class NotificationHelper {
         };
         NotificationCompat.Builder b = create(context, title, message);
         Notification notification = b.build();
-        getManager(context).notify(count++, notification);
+        int id = count++;
+        getManager(context).notify(id, notification);
         notifications.put(count, notification);
         if (!TextUtils.isEmpty(imageURl)) {
-            sendImageNotification(context, b, imageURl, count);
+            sendImageNotification(context, b, imageURl, id);
         }
     }
 
