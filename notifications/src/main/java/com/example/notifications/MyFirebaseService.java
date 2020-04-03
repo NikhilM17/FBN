@@ -23,7 +23,7 @@ public class MyFirebaseService extends FirebaseMessagingService {
 
         RemoteMessage.Notification notification = remoteMessage.getNotification();
 
-        if (notification != null && showNotification) {
+        if (notification != null && !showNotification) {
             if (notification.getImageUrl() == null || TextUtils.isEmpty(notification.getImageUrl().toString())) {
                 NotificationHelper.get().send(getApplicationContext(),
                         notification.getTitle(), notification.getBody());
