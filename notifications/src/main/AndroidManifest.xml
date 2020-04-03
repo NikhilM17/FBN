@@ -5,7 +5,7 @@
     <application>
 
         <service
-            android:name=".MyFirebaseService"
+            android:name=".NotificationFirebaseService"
             android:enabled="true"
             android:exported="false">
             <intent-filter>
