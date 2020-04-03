@@ -102,7 +102,8 @@ public class NotificationHelper {
 
 
         Intent intent = new Intent(context, NotificationActionService.class);
-        PendingIntent pendingIntent = PendingIntent.getService(context, 123, intent, PendingIntent.FLAG_ONE_SHOT);
+        intent.setAction("ClickAction");
+        PendingIntent pendingIntent = PendingIntent.getService(context, 0, intent, 0);
 
 
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)

@@ -13,12 +13,12 @@ public class NotificationActionService extends IntentService {
      *
      *
      */
-    public NotificationActionService() {
+    public NotificationActionService(String name) {
         super(NotificationActionService.class.getSimpleName());
     }
 
     @Override
     protected void onHandleIntent(@Nullable Intent intent) {
-        Log.w("onHandleIntent", "Intent called");
+        Log.e("onHandleIntent", "Intent called");
     }
 }
