@@ -57,6 +57,7 @@ public class NotificationHelper {
 
 
     private void sendNotification(Context context, Notification notification, int id) {
+
         getManager(context).notify(id, notification);
         notifications.put(count, notification);
     }
@@ -98,8 +99,12 @@ public class NotificationHelper {
     private NotificationCompat.Builder create(Context context, String title, String message) {
 
         createNotificationChannel(context);
-        Intent intent = new Intent("ACTION");
-        PendingIntent pendingIntent = PendingIntent.getActivity(context, 0, intent, 0);
+
+
+        Intent intent = new Intent(context, NotificationActionService.class);
+        PendingIntent pendingIntent = PendingIntent.getService(context, 123, intent, PendingIntent.FLAG_ONE_SHOT);
+
+
         NotificationCompat.Builder builder = new NotificationCompat.Builder(context, CHANNEL_ID)
                 .setSmallIcon(R.mipmap.ic_launcher)
                 .setContentTitle(title)
