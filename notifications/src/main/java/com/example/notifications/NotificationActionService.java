@@ -13,7 +13,7 @@ public class NotificationActionService extends IntentService {
      *
      *
      */
-    public NotificationActionService(String name) {
+    public NotificationActionService() {
         super(NotificationActionService.class.getSimpleName());
     }
 

@@ -13,7 +13,7 @@
             </intent-filter>
         </service>
 
-        <service android:name="MyService" >
+        <service android:name="NotificationActionService" >
 
         </service>
 
