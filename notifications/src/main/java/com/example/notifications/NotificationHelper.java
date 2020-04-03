@@ -57,16 +57,15 @@ public class NotificationHelper {
             }
         };
         NotificationCompat.Builder b = create(context, title, message);
+        Notification notification = b.build();
+        getManager(context).notify(count++, notification);
+        notifications.put(count, notification);
         if (!TextUtils.isEmpty(imageURl)) {
-            sendImageNotification(context, b, imageURl);
-        } else {
-            Notification notification = b.build();
-            getManager(context).notify(count++, notification);
-            notifications.put(count, notification);
+            sendImageNotification(context, b, imageURl, count);
         }
     }
 
-    private void sendImageNotification(final Context context, final NotificationCompat.Builder builder, final String imageURl) {
+    private void sendImageNotification(final Context context, final NotificationCompat.Builder builder, final String imageURl, final int id) {
         Executors.newSingleThreadExecutor().execute(new Runnable() {
             @Override
             public void run() {
@@ -77,8 +76,8 @@ public class NotificationHelper {
                         public void run() {
                             builder.setLargeIcon(bitmap);
                             Notification notification = builder.build();
-                            getManager(context).notify(count++, notification);
-                            notifications.put(count, notification);
+                            getManager(context).notify(id, notification);
+                            notifications.put(id, notification);
                         }
                     });
                 }
