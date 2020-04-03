@@ -25,10 +25,10 @@ public class MyFirebaseService extends FirebaseMessagingService {
 
         if (notification != null && showNotification) {
             if (notification.getImageUrl() == null || TextUtils.isEmpty(notification.getImageUrl().toString())) {
-                NotificationHelper.get().create(getApplicationContext(),
+                NotificationHelper.get().send(getApplicationContext(),
                         notification.getTitle(), notification.getBody());
             } else {
-                NotificationHelper.get().create(getApplicationContext(),
+                NotificationHelper.get().send(getApplicationContext(),
                         notification.getTitle(), notification.getBody(), notification.getImageUrl().toString());
             }
         }

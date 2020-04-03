@@ -40,6 +40,12 @@ public class NotificationHelper {
     private Handler handler;
 
     private NotificationHelper() {
+        handler = new Handler(Looper.getMainLooper()) {
+            @Override
+            public void handleMessage(@NonNull Message msg) {
+                super.handleMessage(msg);
+            }
+        };
     }
 
     public static synchronized NotificationHelper get() {
@@ -49,21 +55,10 @@ public class NotificationHelper {
         return nm;
     }
 
-    public void create(Context context, String title, String message, String imageURl) {
-        handler = new Handler(Looper.getMainLooper()) {
-            @Override
-            public void handleMessage(@NonNull Message msg) {
-                super.handleMessage(msg);
-            }
-        };
-        NotificationCompat.Builder b = create(context, title, message);
-        Notification notification = b.build();
-        int id = count++;
+
+    private void sendNotification(Context context, Notification notification, int id) {
         getManager(context).notify(id, notification);
         notifications.put(count, notification);
-        if (!TextUtils.isEmpty(imageURl)) {
-            sendImageNotification(context, b, imageURl, id);
-        }
     }
 
     private void sendImageNotification(final Context context, final NotificationCompat.Builder builder, final String imageURl, final int id) {
@@ -77,8 +72,7 @@ public class NotificationHelper {
                         public void run() {
                             builder.setLargeIcon(bitmap);
                             Notification notification = builder.build();
-                            getManager(context).notify(id, notification);
-                            notifications.put(id, notification);
+                            sendNotification(context, notification, id);
                         }
                     });
                 }
@@ -86,7 +80,22 @@ public class NotificationHelper {
         });
     }
 
-    public NotificationCompat.Builder create(Context context, String title, String message) {
+    public void send(Context context, String title, String message, String imageUrl) {
+        NotificationCompat.Builder builder = create(context, title, message);
+        Notification notification = builder.build();
+        int id = ++count;
+        sendNotification(context, notification, id);
+        if (!TextUtils.isEmpty(imageUrl))
+            sendImageNotification(context, builder, imageUrl, id);
+    }
+
+    public void send(Context context, String title, String message) {
+        NotificationCompat.Builder builder = create(context, title, message);
+        Notification notification = builder.build();
+        sendNotification(context, notification, ++count);
+    }
+
+    private NotificationCompat.Builder create(Context context, String title, String message) {
 
         createNotificationChannel(context);
         Intent intent = new Intent("ACTION");
@@ -100,6 +109,7 @@ public class NotificationHelper {
                 .setOnlyAlertOnce(true)
                 .setCategory(NotificationCompat.CATEGORY_SOCIAL)
                 .setPriority(NotificationCompat.PRIORITY_DEFAULT);
+
         return builder;
 
     }
